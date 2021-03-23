@@ -1,0 +1,29 @@
+* linguist-vendored
+*.bat linguist-language=Flyfish
+# In general, use LF for text
+* text eol=crlf
+
+# Windows CMD does not like LF in batch files
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Visual Studio solutions like to switch to CRLF at times
+*.sln text eol=crlf
+
+*.ai binary
+*.aiff binary
+*.dll binary
+*.eot binary
+*.exe binary
+*.jar binary
+*.jpg binary
+*.gif binary
+*.mp3 binary
+*.o binary
+*.pdf binary
+*.png binary
+*.psd binary
+*.so binary
+*.ttf binary
+*.winmd binary
+*.zip binary

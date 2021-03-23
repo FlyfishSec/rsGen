@@ -1,0 +1,167 @@
+<html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+        <link href="NewErrorPageTemplate.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+		body
+{
+    background-repeat: repeat-x;
+    background-color: white;
+    font-family: "Microsoft YaHei", "verdana", "arial";
+    margin: 0em;
+    color: #1f1f1f;
+}
+
+.mainContent
+{
+    margin-top:80px;
+    width: 700px;
+    margin-left: 120px;
+    margin-right: 120px;
+}
+
+.title
+{
+    color: #54b0f7;
+    font-size: 36px;
+    font-weight: 300;
+    line-height: 40px;
+    margin-bottom: 24px;
+    font-family: "Microsoft YaHei Light", "Microsoft YaHei", "verdana";
+    position: relative;
+}
+
+.errorExplanation
+{
+    color: #000000;
+    font-size: 12pt;
+    font-family: "Microsoft YaHei", "verdana", "arial";
+    text-decoration: none;
+}
+
+.taskSection
+{
+    margin-top: 20px;
+    margin-bottom: 28px;
+    position: relative; 
+}
+
+.tasks
+{
+    color: #000000;
+    font-family: "Microsoft YaHei Light", "Microsoft YaHei", "verdana";
+    font-weight:200;
+    font-size: 12pt;
+}
+
+li
+{
+    margin-top: 8px;
+}
+
+.diagnoseButton
+{
+    outline: none;
+    font-size: 9pt;
+}
+
+.launchInternetOptionsButton
+{
+    outline: none;
+    font-size: 9pt;
+}
+
+.webpageURL
+{
+    direction:ltr;
+}
+
+.hidden
+{
+    display:none;
+}
+
+a
+{
+    color: #0f82dc;
+    font-family: "Microsoft YaHei", "verdana", "arial"; 
+    text-decoration: none;
+}
+
+a:hover
+{
+    text-decoration: underline;
+}
+
+.shieldImage
+{
+    margin-bottom: 12px;
+    padding-right: 8px;
+    vertical-align: text-top;
+}
+
+#errorCode
+{
+    color: #767676;
+}
+
+.BaseTextBlockStlye
+{
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.BaseAltTextBlockStyle
+{
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.BodyTextBlockStyle
+{
+    font-size: 15px;
+}
+</style>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>无法访问此页面</title>
+        <script language="javascript" src="errorPageStrings.js" type="text/javascript">
+        </script>
+        <script language="javascript" src="httpErrorPagesScripts.js" type="text/javascript">
+        </script>
+    </head>
+
+    <body onload="getInfo(); initMoreInfo('infoBlockID');">
+        <div class="mainContent" id="contentContainer">
+            <div class="title" id="mainTitle">无法访问此页面</div>
+            <div class="taskSection" id="taskSection">
+                <ul class="tasks" id="cantDisplayTasks">
+                    <li id="task1-1">确保 Web 地址<span class="webpageURL" id="webpage"> </span>正确</li>
+                    <li id="task1-2"><a href="https://www.bing.com/search?q=http%3A%2F%2&amp;PC=IENEPB">在必应上搜索此站点</a></li>
+                    <li id="task1-3"><a href="javascript:location.reload();">刷新页面</a></li>
+                </ul>
+                <ul class="tasks" id="notConnectedTasks" style="display: none;">
+                    <li id="task2-1">检查确认所有网线都已插好。</li>
+                    <li id="task2-2">确认关闭了飞行模式。</li>
+                    <li id="task2-3">确保开启了无线交换机。</li>
+                    <li id="task2-4">看看能否连接到移动宽带。</li>
+                    <li id="task2-5">重启路由器。</li>
+                </ul>
+            </div>
+            <div align="left" id="moreInformationAlign" aria-labelledby="moreInformation">
+                <table>
+                    <tbody><tr>                      
+                        <td valign="top">
+                            <span id="moreInfoContainer"><a href="javascript:expandCollapse('infoBlockID', true);">详细信息</a></span>
+                        </td>
+                    </tr>
+                </tbody></table>
+                <div class="infoBlock" id="infoBlockID" style="display: block;">
+                    <p class="BodyTextBlockStyle" id="subError" style="margin-left: 20px;">找不到此网站。<br></p>
+                    <p class="BodyTextBlockStyle" id="ErrorCode" style="margin-left: 20px;">错误代码: INET_E_RESOURCE_NOT_FOUND</p>
+                </div>
+            </div>
+            <br>
+            <div id="diagnoseOptions"><button class="diagnoseButton" id="diagnose" onclick="javascript:diagnoseConnectionAndRefresh(); return false;">修复连接问题</button></div>
+            <br>
+        </div>
+    
+
+</body></html>
