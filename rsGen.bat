@@ -191,7 +191,6 @@ if "%~1" equ "" (
 
             ) else (
                 if not "%2"=="-ngrok" (
-                    echo ok
                     if not "%2"=="-pgrok" (
                         if "!rs_os_flag!"=="W10" (
                             call :rs_banner_w10_start
@@ -352,7 +351,6 @@ goto :eof
 ::rs_pgrok
 :rs_pgrok_start
 if exist "%cd%\include\pgrok.exe" (
-    taskkill /f /im pgrok.exe >nul 2>nul
     start "Expose a TCP based service running on port !rs_listen_port!" cmd /c %cd%\include\pgrok.exe -proto=tcp !rs_listen_port! 2>nul
    
     set rs_pgrok=
