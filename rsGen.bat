@@ -301,9 +301,11 @@ goto :eof
 ::rs_ngrok
 :rs_ngrok_start
 if exist "%cd%\include\ngrok.exe" (
-    taskkill /f /im ngrok.exe >nul 2>nul
+    call :rs_random_token_start %cd%\include\rs_ngrok.token
+    echo authtoken: !rs_random_token! >%cd%\include\ngrok.yml
+    echo web_addr: 44480 >>%cd%\include\ngrok.yml
+    echo region: ap >>%cd%\include\ngrok.yml
     start "Expose a TCP based service running on port !rs_listen_port!" cmd /c %cd%\include\ngrok.exe tcp !rs_listen_port! -config=%cd%\include\ngrok.yml 2>nul
-    
     set rs_ngrok=
     set rs_n=0
     FOR /L %%i in (1,1,30) do (
@@ -333,6 +335,19 @@ if exist "%cd%\include\ngrok.exe" (
 )
 goto :eof
 :rs_ngrok_end
+
+::Read random token from text
+:rs_random_token_start
+set i=0
+for /f "tokens=*" %%x in (%1) do (
+    set line[!i!]=%%x
+    set /a i += 1
+)
+set /a j=%random% %% %i%
+set rs_random_token=!line[%j%]!
+::echo !rs_random_token!
+goto :eof
+:rs_random_token_end
 
 ::rs_pgrok
 :rs_pgrok_start
