@@ -1,8 +1,8 @@
 
- rsGen - Reverse Shell Command Genrator.
+ rsGen - Reverse Shell Payload Genrator.
  =
 
-  rsGen is an automated reverse shell command genrator, built by Windows Batch and Jscript. The main functions include native command generation and variant command generation. In version 2.0, I added an anonymous reverse shell receiving function "-ngrok" and "-pgrok".
+  rsGen is a Reverse Shell Payload Generator for hacking. built by Windows Batch and Jscript. The main functions include native command generation and variant command generation. In version 2.0, I added an anonymous reverse shell receiving function "-ngrok" and "-pgrok".
   
 ![rsGen](https://raw.githubusercontent.com/FlyfishSec/rsGen/master/doc/rsgen.png "rsGen")
 
@@ -27,7 +27,7 @@
 -pgrok  Start pgrok TCP Tunnel(Contains -pub, -listen options).like ngrok but free and unlimited.
 
 ```
-![rsGen](https://raw.githubusercontent.com/FlyfishSec/rsGen/master/doc/rsgen-pgrok.png "rsGen-pgrok")
+![rsGen](https://raw.githubusercontent.com/FlyfishSec/rsGen/master/doc/rsgen-ngrok.png "rsGen-ngrok")
 
 
 ## Operating system

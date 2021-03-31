@@ -1,6 +1,6 @@
 @if (@rsgen) == (@RSGEN) @end /***** JS
 @echo off
-title rsGen - Reverse Shell Command Genrator by Flyfish
+title rsGen - Reverse Shell Payload Genrator
 
 ::main
 :rs_main_start
@@ -794,43 +794,43 @@ echo  [93m                 .' ___  ^|^|_   __  ^|^|_   \^|_   _^| [0m
 echo  [92m   _ .--.  .--. [93m/ .'   \_^|  ^| ^|_ \_^|  ^|   \ ^| ^|   
 echo  [92m  [ `/'`\]( (`\][93m^| ^|   ____  ^|  _^| _   ^| ^|\ \^| ^|   
 echo  [92m   ^| ^|     `'.'.[93m\ `.___]  ^|_^| ^|__/ ^| _^| ^|_\   ^|_  
-echo  [92m  [___]   [\__) )[93m`._____.'^|________^|^|_____^|\____^|  [97mv2.0[0m
+echo  [92m  [___]   [\__) )[93m`._____.'^|________^|^|_____^|\____^|  [97mv2.0.2[0m
 echo,
 goto :eof
 :rs_banner_w10_end
 
 :rs_info_w10windows_start
-echo  [93m Windows Command [0m
+echo  [93m Windows Payload [0m
 echo,
 goto :eof
 :rs_info_w10windows_end
 
 :rs_info_w7windows_start
-powershell -c write-host "' Windows Command'" -f yellow 2>nul
+powershell -c write-host "' Windows Payload'" -f yellow 2>nul
 echo,
 goto :eof
 :rs_info_w7windows_end
 
 :rs_info_w10linux_start
-echo  [93m Linux Command[0m
+echo  [93m Linux Payload[0m
 echo,
 goto :eof
 :rs_info_w10linux_end
 
 :rs_info_w7linux_start
-powershell -c write-host "' Linux Command'" -f yellow 2>nul
+powershell -c write-host "' Linux Payload'" -f yellow 2>nul
 echo,
 goto :eof
 :rs_info_w7linux_end
 
 :rs_info_wlinux10_start
-echo  [93m Windows^&Linux[0m
+echo  [93m Windows^&Linux Payload[0m
 echo,
 goto :eof
 :rs_info_wlinux10_end
 
 :rs_info_wlinux7_start
-powershell -c write-host "' Windows&Linux'" -f yellow 2>nul
+powershell -c write-host "' Windows&Linux Payload'" -f yellow 2>nul
 echo,
 goto :eof
 :rs_info_wlinux7_end
@@ -838,15 +838,15 @@ goto :eof
 ::help info
 :rs_help_start
 echo,
-echo  This is an automated Reverse Shell Command Genrator.
+echo  This is a Reverse Shell Payload Generator.
 echo,
 echo Usage: %~nx0 host port [options]
 echo Options:
 echo   -pub       If the target can access the public network, use it.
-echo   -lan       If the target cannot access the public network, use it.
+echo   -lan       If the target cannot access the Internet, use it.
 echo   -listen    If you need to listen the port, use it.
 echo   -ngrok     Start ngrok TCP Tunnel(Contains -pub, -listen options).
-echo   -pgrok     Start a TCP Tunnel(like ngrok but free and unlimited).
+echo   -pgrok     Start pgrok TCP Tunnel(like ngrok but free and unlimited).
 echo,
 echo Examples: %~nx0 8.8.8.8 8888
 echo           %~nx0 8.8.8.8 8888 -pub
