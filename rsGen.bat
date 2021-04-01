@@ -1,6 +1,6 @@
 @if (@rsgen) == (@RSGEN) @end /***** JS
 @echo off
-title rsGen - Reverse Shell Payload Genrator
+title rsGen - Reverse Shell Payload Generator
 
 ::main
 :rs_main_start
