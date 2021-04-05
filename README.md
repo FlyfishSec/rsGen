@@ -2,7 +2,7 @@
  rsGen - Reverse Shell Payload Generator.
  =
 
-  rsGen is a Reverse Shell Payload Generator for hacking. built by Windows Batch and Jscript. The main features include native command generation and variant command generation. In version 2.0, I added a tcp tunnel feature to receive shell("-ngrok" and "-pgrok").
+  rsGen is a Reverse Shell Payload Generator for hacking. I write through windows batch. The main features include native command generation and variant command generation. In version 2.0, I added a tcp tunnel feature to receive shell("-ngrok" and "-pgrok").
   
   I will be constantly updating this tool, if you have found any bugs or issues, please let me know via GitHub Issues and i will try my best to get it resolved quickly.
   
