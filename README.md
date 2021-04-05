@@ -40,7 +40,7 @@
 
    Bitcoin Address QR Code            |  Ethereum Address QR Code         |  Monero Address QR Code
 :-------------------------:|:-------------------------:|:-------------------------:
-![Bitcoin Address](https://raw.githubusercontent.com/FlyfishSec/rsGen/master/donate-qr/donate-btc.png)  |  ![Ethereum Address](https://raw.githubusercontent.com/FlyfishSec/rsGen/master/donate-qr/donate-eth.png) | ![Monero Address](https://raw.githubusercontent.com/FlyfishSec/rsGen/master/donate-qr/donate-xmr.png)
+![Bitcoin Address](https://raw.githubusercontent.com/FlyfishSec/rsGen/master/qrcode/donate-btc.png "btc")  |  ![Ethereum Address](https://raw.githubusercontent.com/FlyfishSec/rsGen/master/qrcode/donate-eth.png "eth") | ![Monero Address](https://raw.githubusercontent.com/FlyfishSec/rsGen/master/qrcode/donate-xmr.png "xmr")
 
 **BTC**: 3F2R6KMXbJ576yJNJpjrBnhVG64Ltg1WoF
 
