@@ -40,7 +40,7 @@
 
    Bitcoin Address QR Code            |  Ethereum Address QR Code         |  Monero Address QR Code
 :-------------------------:|:-------------------------:|:-------------------------:
-![Bitcoin Address](donate-qr/erik-thiart-bitcoin-address.png)  |  ![Ethereum Address](donate-qr/erik-thiart-ethereum-address.png) | ![Monero Address](donate-qr/erik-thiart-litecoin-address.png)
+![Bitcoin Address](donate-qr/donate-btc.png)  |  ![Ethereum Address](donate-qr/donate-eth.png) | ![Monero Address](donate-qr/donate-xmr.png)
 
 **BTC**: 3F2R6KMXbJ576yJNJpjrBnhVG64Ltg1WoF
 
