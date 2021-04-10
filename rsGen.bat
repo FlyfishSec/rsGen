@@ -1,6 +1,5 @@
 @echo off
 title rsGen - Reverse Shell Payload Generator
-
 ::main
 :rs_main_start
 setlocal enableDelayedExpansion
