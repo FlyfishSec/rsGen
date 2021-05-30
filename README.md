@@ -38,14 +38,16 @@
 
 ## Donations
 
-   Bitcoin Address QR Code            |  Ethereum Address QR Code         |  Monero Address QR Code
-:-------------------------:|:-------------------------:|:-------------------------:
-<img width="260" height="260" src="https://raw.githubusercontent.com/FlyfishSec/rsGen/master/Screenshot/donate-btc.png"/>  |  <img width="260" height="260" src="https://raw.githubusercontent.com/FlyfishSec/rsGen/master/Screenshot/donate-eth.png"/> | <img width="260" height="260" src="https://raw.githubusercontent.com/FlyfishSec/rsGen/master/Screenshot/donate-xmr.png"/>
+   Bitcoin Address QR Code            |  Ethereum Address QR Code         |  Monero Address QR Code         |  DOGECOIN Address QR Code
+:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
+<img width="175" height="175" src="https://raw.githubusercontent.com/FlyfishSec/rsGen/master/Screenshot/donate-btc.png"/>  |  <img width="175" height="175" src="https://raw.githubusercontent.com/FlyfishSec/rsGen/master/Screenshot/donate-eth.png"/> | <img width="175" height="175" src="https://raw.githubusercontent.com/FlyfishSec/rsGen/master/Screenshot/donate-xmr.png"/> | <img width="175" height="175" src="https://raw.githubusercontent.com/FlyfishSec/rsGen/master/Screenshot/donate-doge.png"/>
 
 **BTC**: 3F2R6KMXbJ576yJNJpjrBnhVG64Ltg1WoF
 
 **ETH**: 0xab15323b0c7721B6B9fDf5A8089a6Ec697C9feED
 
 **XMR**: 48rBRHh2iV27oHzXMGnjbwCLLyinpqFry6gLTAaQiFVtMRw4kqabeoFiBYqNAPCBHbKjgQezPNLwDihMSNbEPCuYP1xzCWi
+
+**Dogecoin**: DBQATuB7t4wk56dwFqcGdqQtY8BSjL77if
 
 
