@@ -1,6 +1,6 @@
 
- # This tool has been ported to python.Considering cross-platform use, I reimplemented it in python with multiple improvements.
- rsGen - Reverse Shell Payload Generator.
+ # This tool has been ported to python.Considering cross-platform use, I reimplemented [rcX](https://github.com/FlyfishSec/rcX "rcX") in python with multiple improvements.
+ rsGen - Reverse Shell Payload Generator. 
  =
 
   rsGen is a Reverse Shell Payload Generator for hacking. I write through windows batch. The main features include native command generation and variant command generation. In version 2.0, I added a tcp tunnel feature to receive shell("-ngrok" and "-pgrok").
