@@ -1,4 +1,5 @@
 
+ # This tool has been ported to python.Considering cross-platform use, I reimplemented it in python with multiple improvements.
  rsGen - Reverse Shell Payload Generator.
  =
 
