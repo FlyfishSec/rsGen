@@ -1,5 +1,5 @@
 
- # This tool has been ported to python.Considering cross-platform use, I reimplemented [rcX](https://github.com/FlyfishSec/rcX "rcX") in python with multiple improvements.
+ # This tool has been ported to python.Considering cross-platform use, I reimplemented it in python with multiple improvements.[rcX](https://github.com/FlyfishSec/rcX "rcX")
  rsGen - Reverse Shell Payload Generator. 
  =
 
